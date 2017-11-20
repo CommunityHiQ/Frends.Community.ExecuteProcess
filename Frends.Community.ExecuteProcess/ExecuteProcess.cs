@@ -104,7 +104,10 @@ namespace Frends.Community.ExecuteProcess
                         process.BeginOutputReadLine();
                         process.BeginErrorReadLine();
 
-                        if (process.WaitForExit(input.TimeoutMS) && outputWaitHandle.WaitOne(input.TimeoutMS) && errorWaitHandle.WaitOne(input.TimeoutMS))
+                        // convert timeout seconds to milliseconds
+                        var timeoutMS = input.TimeoutSeconds * 1000;
+
+                        if (process.WaitForExit(timeoutMS) && outputWaitHandle.WaitOne(timeoutMS) && errorWaitHandle.WaitOne(timeoutMS))
                         {
                             if (process.ExitCode > 0)
                             {
@@ -117,7 +120,7 @@ namespace Frends.Community.ExecuteProcess
                         }
                         else
                         {
-                            throw new TimeoutException("External process execution timed out after " + input.TimeoutMS + " milliseconds.");
+                            throw new TimeoutException("External process execution timed out after " + input.TimeoutSeconds + " seconds.");
                         }
                     }
                     finally

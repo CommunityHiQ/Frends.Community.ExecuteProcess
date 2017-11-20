@@ -34,9 +34,9 @@ namespace Frends.Community.ExecuteProcess.Tests
 
             var args = new[]
             {
-                new ExecuteProcessCommand.Argument { Name = "/C", Value = "echo testi >> " + testFileWithPath }
+                new Argument { Name = "/C", Value = "echo testi >> " + testFileWithPath }
             };
-            var input = new ExecuteProcessCommand.Input {ScriptPath = _process,  Arguments = args, WaitForResponse =  true, TimeoutMS = 6000 };
+            var input = new Input {ScriptPath = _process,  Arguments = args, WaitForResponse =  true, TimeoutSeconds = 6 };
 
             ExecuteProcessCommand.ExecuteProcess(input);
 
@@ -52,12 +52,12 @@ namespace Frends.Community.ExecuteProcess.Tests
 
             var args = new []
             {
-                new ExecuteProcessCommand.Argument { Name = "/C", Value = "set" },
-                new ExecuteProcessCommand.Argument { Name = "/A", Value = "(1+10)" },
-                new ExecuteProcessCommand.Argument { Name = ">>", Value = testFileWithPath }
+                new Argument { Name = "/C", Value = "set" },
+                new Argument { Name = "/A", Value = "(1+10)" },
+                new Argument { Name = ">>", Value = testFileWithPath }
             };
 
-            var input = new ExecuteProcessCommand.Input { ScriptPath = _process, Arguments = args, WaitForResponse = true, TimeoutMS = 6000 };
+            var input = new Input { ScriptPath = _process, Arguments = args, WaitForResponse = true, TimeoutSeconds = 6 };
 
             ExecuteProcessCommand.ExecuteProcess(input);
 
@@ -69,11 +69,11 @@ namespace Frends.Community.ExecuteProcess.Tests
         {
             var args = new []
             {
-                new ExecuteProcessCommand.Argument { Name = "/C", Value = "set" },
-                new ExecuteProcessCommand.Argument { Name = "/A", Value = "(1111+2222)" }
+                new Argument { Name = "/C", Value = "set" },
+                new Argument { Name = "/A", Value = "(1111+2222)" }
             };
 
-            var input = new ExecuteProcessCommand.Input { ScriptPath = _process, Arguments = args, WaitForResponse = true, TimeoutMS = 6000 };
+            var input = new Input { ScriptPath = _process, Arguments = args, WaitForResponse = true, TimeoutSeconds = 6 };
 
             var result = ExecuteProcessCommand.ExecuteProcess(input);
 
@@ -87,10 +87,10 @@ namespace Frends.Community.ExecuteProcess.Tests
          
             var args = new[]
             {
-                new ExecuteProcessCommand.Argument { Name = "/C", Value = "set" },
-                new ExecuteProcessCommand.Argument { Name = "/A (1+10) >>", Value = testFileWithPath}
+                new Argument { Name = "/C", Value = "set" },
+                new Argument { Name = "/A (1+10) >>", Value = testFileWithPath}
             };
-            var input = new ExecuteProcessCommand.Input { ScriptPath = _process, Arguments = args, WaitForResponse = false };
+            var input = new Input { ScriptPath = _process, Arguments = args, WaitForResponse = false };
             var result = ExecuteProcessCommand.ExecuteProcess(input);
 
             Assert.IsTrue(result.Status);

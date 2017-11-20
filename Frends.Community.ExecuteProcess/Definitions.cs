@@ -1,5 +1,7 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
+using System.ComponentModel;
+
 namespace Frends.Community.ExecuteProcess
 {
     public class Argument
@@ -29,9 +31,10 @@ namespace Frends.Community.ExecuteProcess
         /// </summary>
         public bool WaitForResponse { get; set; }
         /// <summary>
-        /// Timeout in milliseconds
+        /// Timeout in full seconds
         /// </summary>
-        public int TimeoutMS { get; set; }
+        [DefaultValue(10)]
+        public int TimeoutSeconds { get; set; }
     }
 
     public class Output

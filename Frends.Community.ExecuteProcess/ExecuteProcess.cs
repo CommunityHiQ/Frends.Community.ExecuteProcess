@@ -12,78 +12,13 @@ namespace Frends.Community.ExecuteProcess
     public class ExecuteProcessCommand
     {
         /// <summary>
-        /// Argument
-        /// </summary>
-        public class Argument
-        {
-            /// <summary>
-            /// Argument name
-            /// </summary>
-            public string Name { get; set; }
-            /// <summary>
-            /// Argument value
-            /// </summary>
-            public string Value { get; set; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public class Input
-        {
-            /// <summary>
-            /// Script path
-            /// </summary>
-            public string ScriptPath { get; set; }
-            /// <summary>
-            /// Arguments used
-            /// </summary>
-            public Argument[] Arguments { get; set; }
-            /// <summary>
-            /// Wait for response
-            /// </summary>
-            public bool WaitForResponse { get; set; }
-            /// <summary>
-            /// Timeout in milliseconds
-            /// </summary>
-            public int TimeoutMS { get; set; }
-        }
-
-        /// <summary>
-        /// Return object
-        /// </summary>
-        public class Output
-        {
-            /// <summary>
-            /// Request result
-            /// </summary>
-            public string Result { get; set; }
-            /// <summary>
-            /// Execute status
-            /// </summary>
-            public bool Status { get; set; }
-        }
-        
-        /// <summary>
         /// Execute process
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         public static Output ExecuteProcess(Input input)
         {
-            return input.WaitForResponse ? ExecuteProcessWithResult(input) : ExecuteProcessWithoutResult(input);
-        }
-
-        /// <summary>
-        /// Execute process and wait for result
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        /// <exception cref="ApplicationException"></exception>
-        /// <exception cref="TimeoutException"></exception>
-        private static Output ExecuteProcessWithResult(Input input)
-        {
-             var processStartInfo = new ProcessStartInfo
+            var processStartInfo = new ProcessStartInfo
             {
                 UseShellExecute = false,
                 Arguments = string.Join(" ", input.Arguments.Select(x => x.Name + " " + x.Value).ToArray()),
@@ -95,6 +30,26 @@ namespace Frends.Community.ExecuteProcess
                 RedirectStandardInput = true
             };
 
+            if(input.WaitForResponse)
+                return ExecuteProcessWithResult(input, processStartInfo);
+            else
+                using (var process = new Process())
+                {
+                    process.StartInfo = processStartInfo;
+                    return new Output { Status = process.Start() };
+                }
+        }
+
+        /// <summary>
+        /// Execute process and wait for result
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="processStartInfo"></param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        private static Output ExecuteProcessWithResult(Input input, ProcessStartInfo processStartInfo)
+        {
             using (var process = Process.Start(processStartInfo))
             {
                 var output = new StringBuilder();
@@ -171,33 +126,6 @@ namespace Frends.Community.ExecuteProcess
                         process.ErrorDataReceived -= ProcessOnErrorDataReceived;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Execute process asynchronously
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        private static Output ExecuteProcessWithoutResult(Input input)
-        {
-
-            var processStartInfo = new ProcessStartInfo
-            {
-                UseShellExecute = false,
-                Arguments = string.Join(" ", input.Arguments.Select(x => x.Name + " " + x.Value).ToArray()),
-                FileName = input.ScriptPath,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                RedirectStandardInput = true
-            };
-
-            using (var process = new Process())
-            {
-                process.StartInfo = processStartInfo;
-                return new Output { Status = process.Start() };
             }
         }
     }

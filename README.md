@@ -1,4 +1,3 @@
-**[Table of Contents](http://tableofcontent.eu)**
 - [Frends.Community.ExecuteProcess](#frendscommunityexecuteprocess)
   - [Contributing](#contributing)
   - [Documentation](#documentation)
@@ -27,10 +26,10 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 | Property				|  Type   | Description								| Example                     |
 |-----------------------|---------|-----------------------------------------|-----------------------------|
-| ScriptPath		| string	| Path to script | ´%windir%\system32\cmd.exe´ |
-| Arguments			| array<string,string> 	| Command and command value	| ´/C´, ´echo testi >> c:\test.txt´ |
-| WaitForResponse	| bool	| Wait for process response	| ´true´ |
-| Timeout Seconds	| int	| Timeout for process response in full seconds	| ´10´ |
+| ScriptPath		| string	| Path to script | `%windir%\system32\cmd.exe` |
+| Arguments			| array<string,string> 	| Command and command value	| `/C`, `echo testi >> c:\test.txt` |
+| WaitForResponse	| bool	| Wait for process response	| `true` |
+| Timeout Seconds	| int	| Timeout for process response in full seconds	| `10` |
 
 ### Result
 

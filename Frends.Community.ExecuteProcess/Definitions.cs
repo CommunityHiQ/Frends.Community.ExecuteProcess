@@ -1,17 +1,19 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 using System.ComponentModel;
+using Frends.Tasks.Attributes;
+
 
 namespace Frends.Community.ExecuteProcess
 {
     public class Argument
     {
         /// <summary>
-        /// Argument name
+        /// Argument name. Use /C to provide command to cmd.
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// Argument value
+        /// Argument value. When using cmd and /C as argument name, write here actual command being executed.
         /// </summary>
         public string Value { get; set; }
     }
@@ -19,8 +21,9 @@ namespace Frends.Community.ExecuteProcess
     public class Input
     {
         /// <summary>
-        /// Script path
+        /// Path to script or program being executed, use cmd to execute command on "command line".
         /// </summary>
+        [DefaultValue("cmd")]
         public string ScriptPath { get; set; }
         /// <summary>
         /// Arguments used
@@ -34,6 +37,7 @@ namespace Frends.Community.ExecuteProcess
         /// Timeout in full seconds
         /// </summary>
         [DefaultValue(10)]
+        [ConditionalDisplay(nameof(WaitForResponse), true)]
         public int TimeoutSeconds { get; set; }
     }
 

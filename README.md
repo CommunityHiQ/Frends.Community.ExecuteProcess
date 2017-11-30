@@ -26,8 +26,8 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 | Property				|  Type   | Description								| Example                     |
 |-----------------------|---------|-----------------------------------------|-----------------------------|
-| ScriptPath		| string	| Path to script | `%windir%\system32\cmd.exe` |
-| Arguments			| array<string,string> 	| Command and command value	| `/C`, `echo testi >> c:\test.txt` |
+| ScriptPath		| string	| Path to script | `cmd` or `%windir%\system32\cmd.exe` |
+| Arguments			| array<string,string> 	| Argument name and value	| `/C`, `echo testi >> c:\test.txt` |
 | WaitForResponse	| bool	| Wait for process response	| `true` |
 | Timeout Seconds	| int	| Timeout for process response in full seconds	| `10` |
 

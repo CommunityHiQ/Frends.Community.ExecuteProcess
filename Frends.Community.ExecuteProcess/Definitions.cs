@@ -24,6 +24,7 @@ namespace Frends.Community.ExecuteProcess
         /// Path to script or program being executed, use cmd to execute command on "command line".
         /// </summary>
         [DefaultValue("cmd")]
+        [DefaultDisplayType(DisplayType.Text)]
         public string ScriptPath { get; set; }
         /// <summary>
         /// Arguments used

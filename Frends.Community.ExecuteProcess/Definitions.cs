@@ -1,7 +1,7 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 using System.ComponentModel;
-using Frends.Tasks.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Frends.Community.ExecuteProcess
@@ -24,7 +24,7 @@ namespace Frends.Community.ExecuteProcess
         /// Path to script or program being executed, use cmd to execute command on "command line".
         /// </summary>
         [DefaultValue("cmd")]
-        [DefaultDisplayType(DisplayType.Text)]
+        [DisplayFormat(DataFormatString = "Text")]
         public string ScriptPath { get; set; }
         /// <summary>
         /// Arguments used
@@ -38,7 +38,7 @@ namespace Frends.Community.ExecuteProcess
         /// Timeout in full seconds
         /// </summary>
         [DefaultValue(10)]
-        [ConditionalDisplay(nameof(WaitForResponse), true)]
+        [UIHint(nameof(WaitForResponse), "", true)]
         public int TimeoutSeconds { get; set; }
     }
 

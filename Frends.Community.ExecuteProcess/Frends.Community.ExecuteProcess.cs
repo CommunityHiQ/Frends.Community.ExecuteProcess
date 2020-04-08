@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+#pragma warning disable 1591
+
 namespace Frends.Community.ExecuteProcess
 {
     /// <summary>
@@ -13,6 +15,7 @@ namespace Frends.Community.ExecuteProcess
     {
         /// <summary>
         /// Execute process
+        /// Documentation: https://github.com/CommunityHiQ/Frends.Community.ExecuteProcess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -30,7 +33,7 @@ namespace Frends.Community.ExecuteProcess
                 RedirectStandardInput = true
             };
 
-            if(input.WaitForResponse)
+            if (input.WaitForResponse)
                 return ExecuteProcessWithResult(input, processStartInfo);
             else
                 using (var process = new Process())

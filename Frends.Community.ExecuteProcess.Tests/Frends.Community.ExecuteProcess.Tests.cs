@@ -1,12 +1,12 @@
-﻿using System;
 using NUnit.Framework;
+using System;
 using System.IO;
 using System.Threading;
 
 namespace Frends.Community.ExecuteProcess.Tests
 {
     [TestFixture]
-    public class ExecuteTests
+    public class LegacyTests
     {
         private readonly string _testDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"ExecTests\");
         private readonly string _process = Environment.ExpandEnvironmentVariables(@"%windir%\system32\cmd.exe");
@@ -36,7 +36,7 @@ namespace Frends.Community.ExecuteProcess.Tests
             {
                 new Argument { Name = "/C", Value = "echo testi >> " + testFileWithPath }
             };
-            var input = new Input {ScriptPath = _process,  Arguments = args, WaitForResponse =  true, TimeoutSeconds = 6 };
+            var input = new Input { ScriptPath = _process, Arguments = args, WaitForResponse = true, TimeoutSeconds = 6 };
 
             ExecuteProcessCommand.ExecuteProcess(input);
 
@@ -50,7 +50,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         {
             var testFileWithPath = Path.Combine(_testDir, @"test2.txt");
 
-            var args = new []
+            var args = new[]
             {
                 new Argument { Name = "/C", Value = "set" },
                 new Argument { Name = "/A", Value = "(1+10)" },
@@ -67,7 +67,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         [Test]
         public void TestExecuteResult()
         {
-            var args = new []
+            var args = new[]
             {
                 new Argument { Name = "/C", Value = "set" },
                 new Argument { Name = "/A", Value = "(1111+2222)" }
@@ -84,7 +84,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         public void TestExecuteScriptsAsync()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test3.txt");
-         
+
             var args = new[]
             {
                 new Argument { Name = "/C", Value = "set" },
@@ -98,4 +98,5 @@ namespace Frends.Community.ExecuteProcess.Tests
             Assert.AreEqual(File.ReadAllText(testFileWithPath), "11");
         }
     }
+
 }

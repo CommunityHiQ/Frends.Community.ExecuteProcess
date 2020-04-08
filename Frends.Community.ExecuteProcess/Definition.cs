@@ -1,8 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿#pragma warning disable 1591
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-
 
 namespace Frends.Community.ExecuteProcess
 {
@@ -52,5 +51,43 @@ namespace Frends.Community.ExecuteProcess
         /// Execute status
         /// </summary>
         public bool Status { get; set; }
+    }
+
+    /// <summary>
+    /// Parameters class usually requires parameters that are required.
+    /// </summary>
+    public class Parameters
+    {
+        /// <summary>
+        /// Something that will be repeated.
+        /// </summary>
+        [DisplayFormat(DataFormatString = "Text")]
+        public string Message;
+    }
+
+    /// <summary>
+    /// Options class provides additional parameters.
+    /// </summary>
+    public class Options
+    {
+        /// <summary>
+        /// Number of times input is echoed.
+        /// </summary>
+        public int Amount;
+
+        /// <summary>
+        /// How repeats of input are separated.
+        /// </summary>
+        [DisplayFormat(DataFormatString = "Text")]
+        public string Delimiter;
+    }
+
+    public class Result
+    {
+        /// <summary>
+        /// Contains input repeated specified times.
+        /// </summary>
+        [DisplayFormat(DataFormatString = "Text")]
+        public string Replication;
     }
 }

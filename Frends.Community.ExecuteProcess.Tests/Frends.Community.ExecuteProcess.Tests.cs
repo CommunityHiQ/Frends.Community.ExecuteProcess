@@ -8,14 +8,16 @@ namespace Frends.Community.ExecuteProcess.Tests
     [TestFixture]
     public class LegacyTests
     {
-        private readonly string _testDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"ExecTests\");
+        private readonly string _testDir = Path.Combine(Path.GetTempPath(), @"ExecTests"+DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         private readonly string _process = Environment.ExpandEnvironmentVariables(@"%windir%\system32\cmd.exe");
 
         [SetUp]
         public void Setup()
         {
             if (!Directory.Exists(_testDir))
+            {
                 Directory.CreateDirectory(_testDir);
+            }
         }
 
         [TearDown]
@@ -34,7 +36,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
             var args = new[]
             {
-                new Argument { Name = "/C", Value = "echo testi >> " + testFileWithPath }
+                new Argument { Name = "/C", Value = "echo testi >>" + testFileWithPath }
             };
             var input = new Input { ScriptPath = _process, Arguments = args, WaitForResponse = true, TimeoutSeconds = 6 };
 

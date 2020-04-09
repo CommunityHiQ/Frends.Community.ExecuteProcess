@@ -53,41 +53,53 @@ namespace Frends.Community.ExecuteProcess
         public bool Status { get; set; }
     }
 
-    /// <summary>
-    /// Parameters class usually requires parameters that are required.
-    /// </summary>
-    public class Parameters
+
+    public class RunProcessParameters
     {
         /// <summary>
-        /// Something that will be repeated.
+        /// An application or document with which to start a process. Use cmd.exe to execute command on "command line".
         /// </summary>
+        [DefaultValue("cmd.exe")]
         [DisplayFormat(DataFormatString = "Text")]
-        public string Message;
+        public string FileName { get; set; }
+        /// <summary>
+        /// Command-line arguments to use when starting the application.
+        /// </summary>
+        public Argument[] Arguments { get; set; }
+       
     }
 
-    /// <summary>
-    /// Options class provides additional parameters.
-    /// </summary>
-    public class Options
+    public class RunProcessOptions
     {
         /// <summary>
-        /// Number of times input is echoed.
+        /// Timeout in full seconds
         /// </summary>
-        public int Amount;
+        [DefaultValue(30)]
+        public int TimeoutSeconds { get; set; }
 
         /// <summary>
-        /// How repeats of input are separated.
+        /// Kill the process after timeout
         /// </summary>
-        [DisplayFormat(DataFormatString = "Text")]
-        public string Delimiter;
+        [DefaultValue(false)]
+        public bool KillProcessAfterTimeout { get; set; }
     }
 
-    public class Result
+    public class RunProcessResult
     {
+       
         /// <summary>
-        /// Contains input repeated specified times.
+        /// The status that the process returned when it exited.
         /// </summary>
-        [DisplayFormat(DataFormatString = "Text")]
-        public string Replication;
+        public int ExitCode { get; set; }
+
+        /// <summary>
+        /// The process normal output (STDOUT)
+        /// </summary>
+        public string Output { get; set; }
+
+        /// <summary>
+        /// /// The process error output (STDERR)
+        /// </summary>
+        public string StdErr { get; set; }
     }
 }

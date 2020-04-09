@@ -30,7 +30,7 @@ Executes
 | ScriptPath		| `string`	| Path to script | `cmd` or `%windir%\system32\cmd.exe` |
 | Arguments			| `array<string,string>` 	| Argument name and value	| `/C`, `echo testi >> c:\test.txt` |
 | WaitForResponse	| `bool`	| Wait for process response	| `true` |
-| Timeout Seconds	| `int`	| Timeout for process response in full seconds	| `10` |
+| Timeout Seconds	| `int`	| Timeout for process response in full seconds.	| `10` |
 
 ### Returns
 
@@ -48,27 +48,35 @@ Repeats message
 
 | Property | Type | Description | Example |
 | -------- | -------- | -------- | -------- |
-| Message | `string` | Some string that will be repeated. | `foo` |
+| FileName | `string` | An application or document with which to start a process. Use cmd.exe to execute command on "command line" | `/bin/bash` |
+| Arguments | `array<string,string>` |  Argument name and value | `-c`,`ls` |
 
 ### Options
 
 | Property | Type | Description | Example |
 | -------- | -------- | -------- | -------- |
-| Amount | `int` | Amount how many times message is repeated. | `3` |
-| Delimiter | `string` | Character(s) used between replications. | `, ` |
+| TimeoutSeconds | `int` | Timeout in full seconds.  | `30` |
+| KillProcessAfterTimeout | `bool` |  true if process should be killed after timeout; otherwise, false | `false` |
+| RedirectStandardInput | `bool` |  true if input should be read from StandardInput; otherwise, false | `false` |
 
 ### Returns
 
-A result object with parameters.
+A result object with parameters
+
 
 | Property | Type | Description | Example |
 | -------- | -------- | -------- | -------- |
-| Replication | `string` | Repeated string. | `foo, foo, foo` |
+| ExitCode | `int` |  | `0` |
+| Output | `string` | Process' STDOUT output |  `Operation complete.` |
+| StdErr | `string` | Process' STDERR output |  `Error code: 20` |
 
 Usage:
 To fetch result use syntax:
+`#result.ExitCode`
 
-`#result.Replication`
+### Exceptions
+Task could throw `TimeoutException`.
+
 
 # Building
 
@@ -103,5 +111,6 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 | Version | Changes |
 | ------- | ------- |
+| 1.6.0   | RunProcess task (Linux compatible) added |
 | 1.5.0   | Multiplatform version |
 | 1.4.0   | First version |

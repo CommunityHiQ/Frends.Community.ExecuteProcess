@@ -8,7 +8,7 @@ using System.Threading;
 namespace Frends.Community.ExecuteProcess.Tests
 {
     [TestFixture]
-    public class LegacyTests
+    public class Tests
     {
         private readonly string _testDir = Path.Combine(Path.GetTempPath(), @"ExecTests"+DateTime.Now.ToString("yyyyMMdd_HHmmss"));
         private readonly string _process = Environment.ExpandEnvironmentVariables(@"%windir%\system32\cmd.exe");
@@ -127,22 +127,33 @@ namespace Frends.Community.ExecuteProcess.Tests
             Assert.AreEqual(File.ReadAllText(testFileWithPath), "11");
         }
 
-        [Test]
-        [Order(6)]
-        public void TestTimeoutNoKill()
+        private ActualValueDelegate<object> TestBaseTimeoutKill(bool optionsKillProcess)
         {
             var args = new[]
             {
                 new Argument { Name = "/C", Value = "timeout 10 /nobreak >NUL" }
             };
-            
+
             var input = new RunProcessParameters { FileName = _process, Arguments = args };
-            var options = new RunProcessOptions { KillProcessAfterTimeout = false, TimeoutSeconds = 5, RedirectStandardInput=false };
+            var options = new RunProcessOptions { KillProcessAfterTimeout = optionsKillProcess, TimeoutSeconds = 5, RedirectStandardInput = false };
 
-            ActualValueDelegate<object> test = () => ExecuteProcessCommand.RunProcess(input, options);
+            return () => ExecuteProcessCommand.RunProcess(input, options);
+        }
+
+        [Test]
+        [Order(6)]
+        public void TestTimeoutNoKillProcess()
+        {
+            ActualValueDelegate<object> test = TestBaseTimeoutKill(false);
             Assert.That(test, Throws.TypeOf<TimeoutException>());
+        }
 
-
+        [Test]
+        [Order(7)]
+        public void TestTimeoutKillProcess()
+        {
+            ActualValueDelegate<object> test = TestBaseTimeoutKill(true);
+            Assert.That(test, Throws.TypeOf<TimeoutException>());
         }
     }
 

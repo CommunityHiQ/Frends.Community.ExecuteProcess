@@ -11,20 +11,17 @@ namespace Frends.Community.ExecuteProcess
     {
         public static RunProcessResult RunProcessSync(RunProcessParameters input,RunProcessOptions options)
         {
-            var processStartInfo = new ProcessStartInfo
+            using (var process = new Process())
             {
-                UseShellExecute = false,
-                Arguments = string.Join(" ", input.Arguments.Select(x => x.Name + " " + x.Value).ToArray()),
-                FileName = input.FileName,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                RedirectStandardInput = options.RedirectStandardInput
-            };
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.Arguments = string.Join(" ", input.Arguments.Select(x => x.Name + " " + x.Value).ToArray());
+                process.StartInfo.FileName = input.FileName;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardInput = options.RedirectStandardInput;
 
-            using (var process = Process.Start(processStartInfo))
-            {
                 var stdoutSb = new StringBuilder();
                 var stderrSb = new StringBuilder();
 
@@ -74,6 +71,9 @@ namespace Frends.Community.ExecuteProcess
                         process.OutputDataReceived += ProcessOnOutputDataReceived;
                         process.ErrorDataReceived += ProcessOnErrorDataReceived;
 
+                        // Start the process. All event handlers etc. are now registered
+                        process.Start();
+                        
                         process.BeginOutputReadLine();
                         process.BeginErrorReadLine();
 
@@ -81,9 +81,7 @@ namespace Frends.Community.ExecuteProcess
                         var timeoutMS = options.TimeoutSeconds * 1000;
 
                         process.WaitForExit(timeoutMS);
-                        // wait only process
-                        //outputWaitHandle.WaitOne(timeoutMS);
-                        //errorWaitHandle.WaitOne(timeoutMS);
+                       
 
                         if( process.HasExited )
                         {

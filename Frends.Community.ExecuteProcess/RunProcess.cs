@@ -20,7 +20,7 @@ namespace Frends.Community.ExecuteProcess
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
-                RedirectStandardInput = true
+                RedirectStandardInput = options.RedirectStandardInput
             };
 
             using (var process = Process.Start(processStartInfo))

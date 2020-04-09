@@ -82,6 +82,12 @@ namespace Frends.Community.ExecuteProcess
         /// </summary>
         [DefaultValue(false)]
         public bool KillProcessAfterTimeout { get; set; }
+
+        /// <summary>
+        /// true if input should be read from StandardInput; otherwise, false
+        /// </summary>
+        [DefaultValue(true)]
+        public bool RedirectStandardInput { get; set; }
     }
 
     public class RunProcessResult

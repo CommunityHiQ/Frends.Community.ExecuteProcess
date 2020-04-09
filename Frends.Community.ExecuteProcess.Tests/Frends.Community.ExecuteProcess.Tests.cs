@@ -1,5 +1,7 @@
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -30,6 +32,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         }
 
         [Test]
+        [Order(1)]
         public void TestExecuteScript()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test1.txt");
@@ -48,6 +51,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         }
 
         [Test]
+        [Order(2)]
         public void TestExecuteMultipleArgs()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test2.txt");
@@ -67,6 +71,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         }
 
         [Test]
+        [Order(3)]
         public void TestExecuteResult()
         {
             var args = new[]
@@ -83,6 +88,7 @@ namespace Frends.Community.ExecuteProcess.Tests
         }
 
         [Test]
+        [Order(4)]
         public void TestExecuteScriptsAsync()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test3.txt");
@@ -98,6 +104,45 @@ namespace Frends.Community.ExecuteProcess.Tests
             Assert.IsTrue(result.Status);
             Thread.Sleep(100);
             Assert.AreEqual(File.ReadAllText(testFileWithPath), "11");
+        }
+
+        [Test]
+        [Order(5)]
+        public void TestRunMultipleArgs()
+        {
+            var testFileWithPath = Path.Combine(_testDir, @"test4.txt");
+
+            var args = new[]
+            {
+                new Argument { Name = "/C", Value = "set" },
+                new Argument { Name = "/A", Value = "(1+10)" },
+                new Argument { Name = ">>", Value = testFileWithPath }
+            };
+
+            var input = new RunProcessParameters { FileName = _process, Arguments = args  };
+            var options = new RunProcessOptions { KillProcessAfterTimeout = false, TimeoutSeconds = 30, RedirectStandardInput=false };
+
+            ExecuteProcessCommand.RunProcess(input, options);
+
+            Assert.AreEqual(File.ReadAllText(testFileWithPath), "11");
+        }
+
+        [Test]
+        [Order(6)]
+        public void TestTimeoutNoKill()
+        {
+            var args = new[]
+            {
+                new Argument { Name = "/C", Value = "timeout 10 /nobreak >NUL" }
+            };
+            
+            var input = new RunProcessParameters { FileName = _process, Arguments = args };
+            var options = new RunProcessOptions { KillProcessAfterTimeout = false, TimeoutSeconds = 5, RedirectStandardInput=false };
+
+            ActualValueDelegate<object> test = () => ExecuteProcessCommand.RunProcess(input, options);
+            Assert.That(test, Throws.TypeOf<TimeoutException>());
+
+
         }
     }
 

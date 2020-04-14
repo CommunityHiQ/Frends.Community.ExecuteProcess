@@ -88,6 +88,12 @@ namespace Frends.Community.ExecuteProcess
         /// </summary>
         [DefaultValue(true)]
         public bool RedirectStandardInput { get; set; }
+
+        /// <summary>
+        /// true if the task should throw exception when return code is not 0.
+        /// </summary>
+        [DefaultValue(false)]
+        public bool ThrowExceptionOnErrorResponse { get; set; }
     }
 
     public class RunProcessResult

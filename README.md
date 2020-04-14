@@ -58,6 +58,7 @@ Repeats message
 | TimeoutSeconds | `int` | Timeout in full seconds.  | `30` |
 | KillProcessAfterTimeout | `bool` |  true if process should be killed after timeout; otherwise, false | `false` |
 | RedirectStandardInput | `bool` |  true if input should be read from StandardInput; otherwise, false | `false` |
+| ThrowExceptionOnErrorResponse | `bool` | true if the task should throw exception when return code is not 0.| `false` |
 
 ### Returns
 
@@ -75,7 +76,7 @@ To fetch result use syntax:
 `#result.ExitCode`
 
 ### Exceptions
-Task could throw `TimeoutException`.
+Task could throw `TimeoutException` or `ApplicationException`.
 
 
 # Building

@@ -85,7 +85,14 @@ namespace Frends.Community.ExecuteProcess
                         {
                             if (process.HasExited)
                             {
-                                // Existed - return object
+                                // Exited - return object / throw error
+
+                                if ( process.ExitCode != 0 && options.ThrowExceptionOnErrorResponse == true)
+                                {
+                                    throw new ApplicationException("External process execution failed with returncode: " + process.ExitCode + " and output: " + Environment.NewLine + stderrSb.ToString());
+                                }
+
+                                
                                 return new RunProcessResult()
                                 {
                                     ExitCode = process.ExitCode,

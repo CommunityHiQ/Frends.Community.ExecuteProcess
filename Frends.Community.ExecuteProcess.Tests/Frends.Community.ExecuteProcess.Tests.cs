@@ -11,6 +11,7 @@ namespace Frends.Community.ExecuteProcess.Tests
     public class Tests
     {
         private readonly string _testDir = Path.Combine(Path.GetTempPath(), @"ExecTests"+DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+        private readonly string _inputFile = "file8kb.txt";
         private readonly string _process = Environment.ExpandEnvironmentVariables(@"%windir%\system32\cmd.exe");
 
         [SetUp]
@@ -19,6 +20,8 @@ namespace Frends.Community.ExecuteProcess.Tests
             if (!Directory.Exists(_testDir))
             {
                 Directory.CreateDirectory(_testDir);
+
+                File.WriteAllText(Path.Combine(_testDir, _inputFile), new string('a', 8 * 1024+5));
             }
         }
 
@@ -33,7 +36,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(1)]
-        public void TestExecuteScript()
+        public void ExecuteScript()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test1.txt");
 
@@ -52,7 +55,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(2)]
-        public void TestExecuteMultipleArgs()
+        public void ExecuteMultipleArgs()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test2.txt");
 
@@ -72,7 +75,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(3)]
-        public void TestExecuteResult()
+        public void ExecuteResult()
         {
             var args = new[]
             {
@@ -89,7 +92,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(4)]
-        public void TestExecuteScriptsAsync()
+        public void ExecuteScriptsAsync()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test3.txt");
 
@@ -108,7 +111,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(5)]
-        public void TestRunMultipleArgs()
+        public void RunMultipleArgs()
         {
             var testFileWithPath = Path.Combine(_testDir, @"test4.txt");
 
@@ -142,7 +145,7 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(6)]
-        public void TestTimeoutNoKillProcess()
+        public void TimeoutNoKillProcess()
         {
             ActualValueDelegate<object> test = TestBaseTimeoutKill(false);
             Assert.That(test, Throws.TypeOf<TimeoutException>());
@@ -150,10 +153,55 @@ namespace Frends.Community.ExecuteProcess.Tests
 
         [Test]
         [Order(7)]
-        public void TestTimeoutKillProcess()
+        public void TimeoutKillProcess()
         {
             ActualValueDelegate<object> test = TestBaseTimeoutKill(true);
             Assert.That(test, Throws.TypeOf<TimeoutException>());
+        }
+
+        [Test]
+        [Order(8)]
+        // Test possible STDOUT buffer sync problems
+        public void FillSTDOUT()
+        {
+            var testFileWithPath = Path.Combine(_testDir, _inputFile);
+
+            var args = new[]
+            {
+                new Argument { Name = "/C", Value = $"type {testFileWithPath}"  }
+            };
+
+            var input = new RunProcessParameters { FileName = _process, Arguments = args };
+            var options = new RunProcessOptions { KillProcessAfterTimeout = false, TimeoutSeconds = 30, RedirectStandardInput = false };
+
+            var output = ExecuteProcessCommand.RunProcess(input, options);
+
+            Assert.IsTrue(output.Output.Length >=8096+5);
+            Assert.IsTrue(output.Output[1234] == 'a');
+        }
+
+
+        [Test]
+        [Order(9)]
+        // Test possible STDOUT buffer sync problems
+        public void FillSTDOUTTimeout30secsKillProcess()
+        {
+            ActualValueDelegate<object> test = TestBufferTimeoutKill();
+            Assert.That(test, Throws.TypeOf<TimeoutException>());
+        }
+
+        private ActualValueDelegate<object> TestBufferTimeoutKill()
+        {
+            var testFileWithPath = Path.Combine(_testDir, _inputFile);
+
+            var args = new[]
+            {
+                new Argument { Name = "/C", Value = $"type {testFileWithPath} && timeout 60 /nobreak >NUL"  },
+            };
+
+            var input = new RunProcessParameters { FileName = _process, Arguments = args };
+            var options = new RunProcessOptions { KillProcessAfterTimeout = true, TimeoutSeconds = 30, RedirectStandardInput = false };
+            return () => ExecuteProcessCommand.RunProcess(input, options);
         }
     }
 

@@ -80,29 +80,38 @@ namespace Frends.Community.ExecuteProcess
                         // convert timeout seconds to milliseconds
                         var timeoutMS = options.TimeoutSeconds * 1000;
 
-                        process.WaitForExit(timeoutMS);
-                       
-
-                        if( process.HasExited )
+                        // Also wait events to be done
+                        if (process.WaitForExit(timeoutMS) && outputWaitHandle.WaitOne(timeoutMS) && errorWaitHandle.WaitOne(timeoutMS))
                         {
-                            // Existed - return object
-                            return new RunProcessResult() 
-                            { 
-                                ExitCode = process.ExitCode,
-                                Output = stdoutSb.ToString(), 
-                                StdErr = stderrSb.ToString()
-                            }; 
-                        } 
-                        else
-                        { 
-                            // Timeout & process is runnig
+                            if (process.HasExited)
+                            {
+                                // Existed - return object
+                                return new RunProcessResult()
+                                {
+                                    ExitCode = process.ExitCode,
+                                    Output = stdoutSb.ToString(),
+                                    StdErr = stderrSb.ToString()
+                                };
+                            }
+                            else
+                            {
+                                // Timeout & process is runnig
+                                if (options.KillProcessAfterTimeout)
+                                {
+                                    process.Kill();
+                                }
 
-                            if( options.KillProcessAfterTimeout )
+                                throw new TimeoutException($"External process <{process.Id}> execution timed out after {options.TimeoutSeconds} seconds. (1)");
+                            }
+                        }
+                        else
+                        {
+                            // Timeout & process is runnimg
+                            if (process.HasExited == false && options.KillProcessAfterTimeout == true)
                             {
                                 process.Kill();
                             }
-
-                            throw new TimeoutException($"External process <{process.Id}> execution timed out after {options.TimeoutSeconds} seconds.");
+                            throw new TimeoutException($"External process <{process.Id}> execution timed out after {options.TimeoutSeconds} seconds. (2)");
                         }
                     }
                     finally

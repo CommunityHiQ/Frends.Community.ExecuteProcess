@@ -43,7 +43,7 @@ namespace Frends.Community.ExecuteProcess
                         }
                         catch (Exception exception)
                         {
-                            Trace.TraceError($"Error while executing process {input.FileName} and handling output: {exception.ToString()}");
+                            Trace.TraceError($"Error while executing process {input.FileName} and handling output: {exception}");
                         }
                     }
 
@@ -62,7 +62,7 @@ namespace Frends.Community.ExecuteProcess
                         }
                         catch (Exception exception)
                         {
-                            Trace.TraceError($"Error while executing process {input.FileName} and handling error output: {exception.ToString()}");
+                            Trace.TraceError($"Error while executing process {input.FileName} and handling error output: {exception}");
                         }
                     }
 

@@ -42,7 +42,7 @@ Executes a command with parameters. Old task method, which is kept to maintain b
 
 ## RunProcess
 
-Repeats message
+New task method to execute commands with parameters. Has better options to control execution and output.
 
 ### Properties
 

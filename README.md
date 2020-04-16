@@ -21,7 +21,7 @@ https://www.myget.org/F/frends-community/api/v3/index.json and in Gallery view i
 
 ## ExecuteProcess
 
-Executes 
+Executes a command with parameters. Old task method, which is kept to maintain backward compatibility.
 
 ### Properties
 

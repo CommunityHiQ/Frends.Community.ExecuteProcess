@@ -1,0 +1,10 @@
+﻿{
+	"Tasks": [
+		{
+			"TaskMethod": "Frends.Community.ExecuteProcess.ExecuteProcessCommand.ExecuteProcess"
+		},
+		{
+			"TaskMethod": "Frends.Community.ExecuteProcess.ExecuteProcessCommand.RunProcess"
+		}
+	]
+}

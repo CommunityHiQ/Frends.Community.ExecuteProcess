@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+
+#pragma warning disable 1591
 
 namespace Frends.Community.ExecuteProcess
 {
@@ -12,7 +15,19 @@ namespace Frends.Community.ExecuteProcess
     public class ExecuteProcessCommand
     {
         /// <summary>
+        /// Starts the process and waits results.
+        /// </summary>
+        /// <param name="input">Process data</param>
+        /// <param name="options">Run options</param>
+        /// <returns>{RunProcessResult}</returns>
+        public static RunProcessResult RunProcess([PropertyTab] RunProcessParameters input, [PropertyTab] RunProcessOptions options)
+        {
+            return Frends.Community.ExecuteProcess.RunProcess.RunProcessSync(input, options);
+        }
+
+        /// <summary>
         /// Execute process
+        /// Documentation: https://github.com/CommunityHiQ/Frends.Community.ExecuteProcess
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -30,7 +45,7 @@ namespace Frends.Community.ExecuteProcess
                 RedirectStandardInput = true
             };
 
-            if(input.WaitForResponse)
+            if (input.WaitForResponse)
                 return ExecuteProcessWithResult(input, processStartInfo);
             else
                 using (var process = new Process())

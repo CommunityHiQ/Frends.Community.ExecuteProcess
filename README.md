@@ -115,3 +115,4 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 | 1.6.0   | RunProcess task (Linux compatible) added |
 | 1.5.0   | Multiplatform version |
 | 1.4.0   | First version |
+| 2.0.0   | Targeted to .NET6 and 8 and updated System.ComponentModel.Annotations to 5.0.0. |
